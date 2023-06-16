@@ -117,7 +117,7 @@ else:
     DEVICES = train_config['distribute']['devices']
 
 if DATASET == 'Cityscapes':
-    NUM_CLASSES = 20+1
+    NUM_CLASSES = 20
     IGNORE_CLASS = 19
     INPUT_SHAPE = INPUT_SHAPE
 elif DATASET == 'Mapillary':
