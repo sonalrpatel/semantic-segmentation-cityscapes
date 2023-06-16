@@ -9,7 +9,8 @@ class CityscapesDataset():
     def __init__(self,
                  num_classes: int, 
                  split: str, 
-                 preprocessing: str = 'default', 
+                 preprocessing: str = 'default',
+                 input_shape: tuple = (),
                  mode: str = 'fine', 
                  shuffle = True,
                  cache = False,
@@ -35,6 +36,7 @@ class CityscapesDataset():
         self.num_classes = num_classes
         self.split = split
         self.preprocessing = preprocessing
+        self.input_shape = input_shape
         self.mode = mode
         self.shuffle = shuffle
         self.cache = cache
@@ -92,12 +94,12 @@ class CityscapesDataset():
     
     
     def set_shape_image(self, image):
-        image.set_shape((1024, 2048, 3))
+        image.set_shape((self.input_shape[0], self.input_shape[1], 3))
         return image
     
     def set_shape_dataset(self, image, label):
-        image.set_shape((1024, 2048, 3))
-        label.set_shape((1024, 2048, 1))
+        image.set_shape((self.input_shape[0], self.input_shape[1], 3))
+        label.set_shape((self.input_shape[0], self.input_shape[1], 1))
         return image, label
     
     
