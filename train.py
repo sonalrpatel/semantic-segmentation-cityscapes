@@ -387,7 +387,7 @@ if BACKBONE is not None:
     dataTrain = dataTrain.shuffle(buffer_size=MAX_SAMPLES_TRAINING, reshuffle_each_iteration=True)
     dataTrain = dataTrain.map(parse_sample, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     dataTrain = dataTrain.batch(BATCH_SIZE-2, drop_remainder=True)
-    dataTrain = dataTrain.repeat(EPOCHS)
+    dataTrain = dataTrain.repeat(FINAL_EPOCHS-EPOCHS)
     dataTrain = dataTrain.prefetch(1)
     print("Built data pipeline for training")
 
@@ -395,15 +395,15 @@ if BACKBONE is not None:
     dataValid = tf.data.Dataset.from_tensor_slices((files_valid_input, files_valid_label))
     dataValid = dataValid.map(parse_sample, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     dataValid = dataValid.batch(BATCH_SIZE-2, drop_remainder=True)
-    dataValid = dataValid.repeat(EPOCHS)
+    dataValid = dataValid.repeat(FINAL_EPOCHS-EPOCHS)
     dataValid = dataValid.prefetch(1)
     print("Built data pipeline for validation")
 
-    n_batches_train = dataTrain.cardinality().numpy() // EPOCHS
-    n_batches_valid = dataValid.cardinality().numpy() // EPOCHS
+    n_batches_train = dataTrain.cardinality().numpy() // (FINAL_EPOCHS-EPOCHS)
+    n_batches_valid = dataValid.cardinality().numpy() // (FINAL_EPOCHS-EPOCHS)
 
     # Re-define checkpoint callback to save only the best model
-    model_checkpoint_callback = ModelCheckpoint(filepath=checkpoint_filepath,                                           
+    model_checkpoint_callback = ModelCheckpoint(filepath=checkpoint_filepath,
                                                 save_weights_only=False,
                                                 monitor='val_MeanIoU_ignore',
                                                 mode='max',
